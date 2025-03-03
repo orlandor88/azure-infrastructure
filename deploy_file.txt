@@ -1,0 +1,22 @@
+1. Crearea unui Service Principal pentru autentificare în Azure
+az ad sp create-for-rbac --name "github-actions-sp" --role contributor --scopes /subscriptions/{SUBSCRIPTION_ID} --sdk-auth
+
+2. Adăugarea credențialelor în GitHub Secrets
+Mergi la GitHub → Repository → Settings → Secrets and variables → Actions → New Repository Secret
+Adaugă un secret numit AZURE_CREDENTIALS și inserează JSON-ul generat mai sus.
+
+3. Crearea unui workflow GitHub Actions
+În repo-ul GitHub, creează un fișier la calea:
+📂 .github/workflows/deploy.yml
+
+4. Testarea deploy-ului
+Fă un commit și push în repo-ul tău GitHub:
+
+git add .
+git commit -m "Automated Azure deploy"
+git push origin main
+
+Verifică GitHub Actions
+Mergi la repo-ul GitHub
+Accesează tab-ul Actions
+Vezi rularea workflow-ului
