@@ -1,0 +1,21 @@
+name: Destroy Azure Infrastructure
+
+on:
+  workflow_dispatch:  # Acest workflow poate fi declanșat manual din GitHub Actions
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Delete Resource Group
+        run: |
+          az group delete --name MyResourceGroup --yes --no-wait
