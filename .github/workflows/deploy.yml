@@ -42,8 +42,15 @@ jobs:
 
           az monitor log-analytics workspace create --resource-group MyResourceGroup --workspace-name MyLogWorkspace
 
-          az monitor autoscale create --resource-group MyResourceGroup --resource MyAppServicePlan --min-count 1 --max-count 3 --count 4
-
+          # Creare autoscale pentru planul de aplicație
+          az monitor autoscale create \
+            --resource-group MyResourceGroup \
+            --resource-type Microsoft.Web/serverfarms \
+            --resource MyAppServicePlan \
+            --min-count 1 \
+            --max-count 3 \
+            --count 4
+            
       - name: Create Table Storage
         run: |
           az storage table create --name MyTable \
