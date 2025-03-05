@@ -30,7 +30,7 @@ jobs:
           
           az appservice plan create --name MyAppServicePlan --resource-group MyResourceGroup --sku B1 --is-linux
           
-          az webapp create --resource-group MyResourceGroup --plan MyAppServicePlan --name MyWebApp --runtime "DOTNETCORE:6.0"
+          az webapp create --resource-group MyResourceGroup --plan MyAppServicePlan --name OrlandoWebApp --runtime "DOTNETCORE:6.0"
 
           az sql server create --name myserver --resource-group MyResourceGroup --location westeurope --admin-user myadmin --admin-password MyPassword123!
           
