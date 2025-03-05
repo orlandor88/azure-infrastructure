@@ -32,13 +32,13 @@ jobs:
           
           az webapp create --resource-group MyResourceGroup --plan MyAppServicePlan --name OrlandoWebApp --runtime "DOTNETCORE:6.0"
 
-          az storage account create --name mystorageaccount --resource-group MyResourceGroup --sku Standard_LRS --kind StorageV2
+          az storage account create --name stracc4565678 --resource-group MyResourceGroup --sku Standard_LRS --kind StorageV2
           
           # Obține cheia de acces a contului de stocare
-          STORAGE_KEY=$(az storage account keys list --resource-group MyResourceGroup --account-name mystorageaccount --query '[0].value' -o tsv)
+          STORAGE_KEY=$(az storage account keys list --resource-group MyResourceGroup --account-name stracc4565678 --query '[0].value' -o tsv)
           
           # Setează cheia ca variabilă secretă în GitHub Actions (nu poate fi folosită direct ca secret, dar o poți trimite într-un fișier sau log)
-          echo "STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;AccountName=mystorageaccount;AccountKey=$STORAGE_KEY;EndpointSuffix=core.windows.net" >> $GITHUB_ENV
+          echo "STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;AccountName=stracc4565678;AccountKey=$STORAGE_KEY;EndpointSuffix=core.windows.net" >> $GITHUB_ENV
 
           az monitor log-analytics workspace create --resource-group MyResourceGroup --workspace-name MyLogWorkspace
 
@@ -47,14 +47,14 @@ jobs:
       - name: Create Table Storage
         run: |
           az storage table create --name MyTable \
-            --account-name mystorageaccount
+            --account-name stracc4565678
 
       - name: Create Blob Storage Container
         run: |
           az storage container create --name myblobcontainer \
-            --account-name mystorageaccount
+            --account-name stracc4565678
 
       - name: Set WebApp Configuration
         run: |
           az webapp config appsettings set --resource-group MyResourceGroup --name OrlandoWebApp --settings \
-            STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=mystorageaccount;AccountKey=${{ secrets.AZURE_STORAGE_KEY }};EndpointSuffix=core.windows.net"
+            STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=stracc4565678;AccountKey=${{ secrets.AZURE_STORAGE_KEY }};EndpointSuffix=core.windows.net"
