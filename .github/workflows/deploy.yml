@@ -47,10 +47,10 @@ jobs:
             --resource-group MyResourceGroup \
             --resource-type Microsoft.Web/serverfarms \
             --resource MyAppServicePlan \
-            --min-count 1 \
-            --max-count 3 \
+            --min-count 2 \
+            --max-count 5 \
             --count 4
-            
+
       - name: Create Table Storage
         run: |
           az storage table create --name MyTable \
