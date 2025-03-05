@@ -32,14 +32,29 @@ jobs:
           
           az webapp create --resource-group MyResourceGroup --plan MyAppServicePlan --name OrlandoWebApp --runtime "DOTNETCORE:6.0"
 
-          az sql server create --name myserver --resource-group MyResourceGroup --location westeurope --admin-user myadmin --admin-password MyPassword123!
-          
-          az sql db create --resource-group MyResourceGroup --server myserver --name MyDatabase --service-objective S0
-
-          az sql server firewall-rule create --resource-group MyResourceGroup --server myserver --name AllowAzureServices --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
-
           az storage account create --name mystorageaccount --resource-group MyResourceGroup --sku Standard_LRS --kind StorageV2
+          
+          # Obține cheia de acces a contului de stocare
+          STORAGE_KEY=$(az storage account keys list --resource-group MyResourceGroup --account-name mystorageaccount --query '[0].value' -o tsv)
+          
+          # Setează cheia ca variabilă secretă în GitHub Actions (nu poate fi folosită direct ca secret, dar o poți trimite într-un fișier sau log)
+          echo "STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;AccountName=mystorageaccount;AccountKey=$STORAGE_KEY;EndpointSuffix=core.windows.net" >> $GITHUB_ENV
 
           az monitor log-analytics workspace create --resource-group MyResourceGroup --workspace-name MyLogWorkspace
 
           az monitor autoscale create --resource-group MyResourceGroup --resource MyAppServicePlan --min-count 1 --max-count 3
+
+      - name: Create Table Storage
+        run: |
+          az storage table create --name MyTable \
+            --account-name mystorageaccount
+
+      - name: Create Blob Storage Container
+        run: |
+          az storage container create --name myblobcontainer \
+            --account-name mystorageaccount
+
+      - name: Set WebApp Configuration
+        run: |
+          az webapp config appsettings set --resource-group MyResourceGroup --name OrlandoWebApp --settings \
+            STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=mystorageaccount;AccountKey=${{ secrets.AZURE_STORAGE_KEY }};EndpointSuffix=core.windows.net"
